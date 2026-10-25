@@ -1,9 +1,13 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import Quickshell
 import qs.Common
 import qs.Services
 import qs.Modules.Plugins
 import "./P5CalendarLogic.js" as Logic
+import "./holidays" as Calendar
+import "./holidays/HolidayLogic.js" as HolidayLogic
 
 DesktopPluginComponent {
     id: root
@@ -42,6 +46,24 @@ DesktopPluginComponent {
     readonly property int dayOfWeek: now.getDay()
     readonly property var dayNames: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     readonly property string currentDayName: dayNames[dayOfWeek]
+
+    Calendar.HolidayCalendar {
+        id: holidays
+        active: root.pluginData.holidayHighlightEnabled ?? false
+        holidayCalendarId: root.pluginData.holidayCalendarId ?? ""
+        workingCalendarId: root.pluginData.workingCalendarId ?? ""
+        today: root.now
+    }
+
+    readonly property string dayStyle: HolidayLogic.getDayStyle(dayOfWeek, holidays.dateKey,
+        holidays.usable ? holidays.events : [], holidays.holidayCalendarId, holidays.workingCalendarId)
+
+    Connections {
+        target: PluginService
+        function onGlobalVarChanged(pluginId, varName) {
+            if (pluginId === "persona5Calendar" && varName === "holidayRefresh") holidays.refresh();
+        }
+    }
 
     // P5 Version: 0 = Vanilla, 1 = Royal
     readonly property int effectiveVersion: {
@@ -211,7 +233,7 @@ DesktopPluginComponent {
 
             Image {
                 anchors.fill: parent
-                source: "assets/Week/" + root.effectiveVersion + "/" + root.currentDayName + "Top.png"
+                source: HolidayLogic.getWeekTopAsset(root.effectiveVersion, root.currentDayName, root.dayStyle)
                 asynchronous: true
                 smooth: true
             }

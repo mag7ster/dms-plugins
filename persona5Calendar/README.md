@@ -22,6 +22,15 @@ git clone https://github.com/hthienloc/dms-persona5-calendar ~/.config/DankMater
 - **Animated Weather** - 3-frame cycling icons synced with DMS `WeatherService`
 - **Dynamic Theming** - Auto-switches between P5 Vanilla and P5 Royal palettes
 - **Time of Day** - Game schedule or astronomical sun period tracking
+- **Holiday Highlighting** - Optional Dux Calendar integration with red holiday dates and working-day exceptions
+
+## Holiday calendars
+
+1. Install and start [Dux Calendar (`dcal`)](https://duxlabs.dev/docs/dcal/installation),
+   using a native or Flatpak installation, and connect a holiday calendar for your country or region.
+2. Enable **Highlight Holidays** in the widget settings and select **Calendar of Red Dates**.
+3. Optionally select a separate **Working Exceptions Calendar** with all-day events on
+   transferred working days. These events take priority over holidays.
 
 ## Usage
 
