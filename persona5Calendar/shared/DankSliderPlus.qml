@@ -209,14 +209,14 @@ Item {
                             wheelEvent.accepted = false;
                             return;
                         }
-                        let wheelStep = slider.step > 1 ? slider.step : Math.max(1, (maximum - minimum) / 100);
-                        let newValue = wheelEvent.angleDelta.y > 0 ? Math.min(maximum, value + wheelStep) : Math.max(minimum, value - wheelStep);
+                        let wheelStep = slider.step > 1 ? slider.step : Math.max(1, (slider.maximum - slider.minimum) / 100);
+                        let newValue = wheelEvent.angleDelta.y > 0 ? Math.min(slider.maximum, slider.value + wheelStep) : Math.max(slider.minimum, slider.value - wheelStep);
                         if (slider.step > 1)
                             newValue = Math.round(newValue / slider.step) * slider.step;
                         newValue = Math.round(newValue);
-                        if (newValue !== value) {
-                            value = newValue;
-                            sliderValueChanged(newValue);
+                        if (newValue !== slider.value) {
+                            slider.value = newValue;
+                            slider.sliderValueChanged(newValue);
                         }
                         wheelEvent.accepted = true;
                     }
@@ -224,7 +224,7 @@ Item {
                         if (slider.enabled) {
                             slider.isDragging = true;
                             sliderMouseArea.isDragging = true;
-                            updateValueFromPosition(mouse.x);
+                            slider.updateValueFromPosition(mouse.x);
                         }
                     }
                     onReleased: {
@@ -236,12 +236,12 @@ Item {
                     }
                     onPositionChanged: mouse => {
                         if (pressed && slider.isDragging && slider.enabled) {
-                            updateValueFromPosition(mouse.x);
+                            slider.updateValueFromPosition(mouse.x);
                         }
                     }
                     onClicked: mouse => {
                         if (slider.enabled && !slider.isDragging) {
-                            updateValueFromPosition(mouse.x);
+                            slider.updateValueFromPosition(mouse.x);
                         }
                     }
                 }
@@ -309,6 +309,7 @@ Item {
                                 Repeater {
                                     model: 12
                                     Rectangle {
+                                        required property int index
                                         width: Math.ceil(parent.width / 4)
                                         height: Math.ceil(parent.height / 3)
                                         color: ((Math.floor(index / 4) + index) % 2 === 0) ? Theme.withAlpha(Theme.surfaceText, 0.06) : Theme.withAlpha(Theme.surfaceText, 0.16)

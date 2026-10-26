@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import Quickshell
 import qs.Common
@@ -25,13 +27,14 @@ Item {
         width: parent.width
         spacing: Theme.spacingS
         anchors.top: parent.top
-        anchors.topMargin: expanded ? Theme.spacingXS : 0
+        anchors.topMargin: root.expanded ? Theme.spacingXS : 0
 
         Repeater {
             id: repeater
 
             delegate: Row {
                 id: creditRow
+                required property var modelData
                 width: root.width
                 spacing: Theme.spacingM
 

@@ -79,7 +79,7 @@ Item {
     function findSettings() {
         let item = parent;
         while (item) {
-            if (item.saveValue !== undefined && item.loadValue !== undefined)
+            if ("saveValue" in item && "loadValue" in item)
                 return item;
             item = item.parent;
         }
