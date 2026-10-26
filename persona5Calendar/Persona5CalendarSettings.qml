@@ -193,9 +193,10 @@ PluginSettings {
             text: I18n.trFor("persona5Calendar", "Holiday Calendar Guide")
             icon: "help"
         }
-        Text {
+        StyledText {
             width: parent.width
             wrapMode: Text.WordWrap
+            elide: Text.ElideNone
             color: Theme.surfaceText
             font.pixelSize: Theme.fontSizeMedium
             text: I18n.trFor("persona5Calendar", "Connect a holiday calendar in Dux Calendar, then select it below. All-day events turn dates red. A separate working exceptions calendar takes priority.")
@@ -236,9 +237,10 @@ PluginSettings {
             options: root.calendarOptions(value, holidayCalendar.value)
             enabled: holidayEnabled.value
         }
-        Text {
+        StyledText {
             width: parent.width
             wrapMode: Text.WordWrap
+            elide: Text.ElideNone
             color: Theme.surfaceVariantText
             font.pixelSize: Theme.fontSizeMedium
             text: root.holidayStatusText

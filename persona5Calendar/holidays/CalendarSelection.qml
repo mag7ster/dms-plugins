@@ -29,13 +29,14 @@ Column {
     Component.onCompleted: Qt.callLater(loadValue)
     onValueChanged: if (initialized) settings.saveValue(settingKey, value)
 
-    Text {
+    StyledText {
         width: parent.width
         text: root.label
         color: Theme.surfaceText
         font.pixelSize: Theme.fontSizeLarge
         font.weight: Font.Medium
         wrapMode: Text.WordWrap
+        elide: Text.ElideNone
     }
     DDropdown {
         width: parent.width
@@ -48,12 +49,13 @@ Column {
             if (option) root.value = option.value;
         }
     }
-    Text {
+    StyledText {
         width: parent.width
         visible: root.description !== ""
         text: root.description
         color: Theme.surfaceVariantText
         font.pixelSize: Theme.fontSizeSmall
         wrapMode: Text.WordWrap
+        elide: Text.ElideNone
     }
 }
