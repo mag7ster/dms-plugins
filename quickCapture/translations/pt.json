@@ -161,8 +161,17 @@
   "Capture Actions": {
     "Capture Actions": ""
   },
+  "Capture Fullscreen": {
+    "Capture Fullscreen": ""
+  },
   "Capture Options": {
     "Capture Options": ""
+  },
+  "Capture Region": {
+    "Capture Region": ""
+  },
+  "Capture Window": {
+    "Capture Window": ""
   },
   "Capturing...": {
     "Capturing...": ""
@@ -431,6 +440,9 @@
   "Free": {
     "Free": ""
   },
+  "From Clipboard": {
+    "From Clipboard": ""
+  },
   "Fullscreen": {
     "Fullscreen": "Tela Cheia"
   },
@@ -611,6 +623,9 @@
   "Modal": {
     "Modal": ""
   },
+  "More Options": {
+    "More Options": ""
+  },
   "More Tools": {
     "More Tools": ""
   },
@@ -625,6 +640,9 @@
   },
   "No QR code detected": {
     "No QR code detected": ""
+  },
+  "No Tesseract language packs found. Ensure tesseract is installed and has language data packages.": {
+    "No Tesseract language packs found. Ensure tesseract is installed and has language data packages.": ""
   },
   "No output available": {
     "No output available": ""
@@ -682,6 +700,9 @@
   },
   "Open %1 menu (Popout)": {
     "Open %1 menu (Popout)": ""
+  },
+  "Open Captures Folder": {
+    "Open Captures Folder": ""
   },
   "Open Image": {
     "Open Image": ""
@@ -806,8 +827,20 @@
   "Recent Edits": {
     "Recent Edits": ""
   },
+  "Recent History": {
+    "Recent History": ""
+  },
+  "Record Fullscreen": {
+    "Record Fullscreen": ""
+  },
   "Record Microphone": {
     "Record Microphone": ""
+  },
+  "Record Region": {
+    "Record Region": ""
+  },
+  "Record Screen": {
+    "Record Screen": ""
   },
   "Record System Audio": {
     "Record System Audio": ""
@@ -962,8 +995,14 @@
   "Select Color Slots %1": {
     "Select Color Slots %1": ""
   },
+  "Select Image File": {
+    "Select Image File": ""
+  },
   "Select Image to Annotate": {
     "Select Image to Annotate": ""
+  },
+  "Select one or more installed Tesseract language packs for OCR text recognition.": {
+    "Select one or more installed Tesseract language packs for OCR text recognition.": ""
   },
   "Select screen recording backend. Auto attempts GPU first and falls back to CPU (%1).": {
     "Select screen recording backend. Auto attempts GPU first and falls back to CPU (%1).": ""
@@ -1063,6 +1102,9 @@
   },
   "Stop & Save": {
     "Stop & Save": ""
+  },
+  "Stop Recording": {
+    "Stop Recording": ""
   },
   "Surface Container Highest": {
     "Surface Container Highest": ""

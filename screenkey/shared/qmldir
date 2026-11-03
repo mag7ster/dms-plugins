@@ -1,4 +1,5 @@
 module dms.common
+singleton M3E 1.0 M3E.qml
 ColorSettingPlus 1.0 ColorSettingPlus.qml
 CopyBox 1.0 CopyBox.qml
 CreditsList 1.0 CreditsList.qml
@@ -15,3 +16,6 @@ SliderSettingPlus 1.0 SliderSettingPlus.qml
 StringSettingPlus 1.0 StringSettingPlus.qml
 ToggleSettingPlus 1.0 ToggleSettingPlus.qml
 UsageGuide 1.0 UsageGuide.qml
+ButtonGroupSettingPlus 1.0 ButtonGroupSettingPlus.qml
+singleton InputDeviceScanner 1.0 InputDeviceScanner.qml
+InputEventListener 1.0 InputEventListener.qml

@@ -18,58 +18,12 @@ PluginSettings {
     }
 
     function scanDevices() {
-        const script = `
-import os, json, re
-
-include_pattern = "kanata"
-exclude_pattern = [
-    "power button", "video bus", "speaker", "headphone",
-    "lid switch", "touchpad", "extra buttons", "uinput",
-    "server", "hitune", "inphic", "instant", "webcam", "video"
-]
-
-devs = []
-if os.path.exists('/proc/bus/input/devices'):
-    with open('/proc/bus/input/devices') as f:
-        content = f.read()
-        
-    sections = content.strip().split('\\n\\n')
-    for section in sections:
-        name = ""
-        handlers = ""
-        for line in section.split('\\n'):
-            if line.startswith('N: Name='):
-                name = re.search(r'Name="([^"]+)"', line).group(1)
-            elif line.startswith('H: Handlers='):
-                handlers = line.split('=')[1]
-        
-        if name and handlers:
-            lower_name = name.lower()
-            is_included = include_pattern in lower_name
-            is_excluded = any(x in lower_name for x in exclude_pattern)
-            
-            # Check for kbd handler and filter out non-keyboards
-            if 'kbd' in handlers and (is_included or ('mouse' not in handlers and not is_excluded)):
-                # Find event path
-                event_match = re.search(r'event(\\d+)', handlers)
-                if event_match:
-                    event_path = "/dev/input/event" + event_match.group(1)
-                    devs.append((name + " (" + event_path.split('/')[-1] + ")", event_path))
-
-print(json.dumps(devs))
-`;
-        Proc.runCommand("screenkey.scanDevices", ["python3", "-c", script], (stdout, exitCode) => {
-            if (exitCode !== 0) return;
-            try {
-                const data = JSON.parse(stdout.trim());
-                var options = [{ label: "All Keyboards (Auto)", value: "all" }];
-                for (var i = 0; i < data.length; i++) {
-                    options.push({ label: data[i][0], value: data[i][1] });
-                }
-                root.deviceOptions = options;
-            } catch(e) {
-                console.warn("[Screenkey] Failed to parse device scanner output:", e);
+        InputDeviceScanner.scanKeyboards("screenkey.scanDevices", (devices) => {
+            const options = [{ label: "All Keyboards (Auto)", value: "all" }];
+            for (let i = 0; i < devices.length; i++) {
+                options.push(devices[i]);
             }
+            root.deviceOptions = options;
         });
     }
 
@@ -139,10 +93,11 @@ print(json.dumps(devs))
         SectionTitle {
             text: I18n.tr("Layout & Animations")
             icon: "display_settings"
-            showReset: positionSetting.isDirty || animationTypeSetting.isDirty || keycapStyleSetting.isDirty || roundedKeycapsSetting.isDirty || overlayOpacitySetting.isDirty || marginSizeSetting.isDirty || charLimitSetting.isDirty || textColorSetting.isDirty || keycapTextColorSetting.isDirty || historyLimitSetting.isDirty || bgColorSetting.isDirty || customSeparatorSetting.isDirty
+            showReset: positionSetting.isDirty || entryAnimationSetting.isDirty || exitAnimationSetting.isDirty || keycapStyleSetting.isDirty || roundedKeycapsSetting.isDirty || overlayOpacitySetting.isDirty || marginSizeSetting.isDirty || charLimitSetting.isDirty || textColorSetting.isDirty || keycapTextColorSetting.isDirty || historyLimitSetting.isDirty || bgColorSetting.isDirty || customSeparatorSetting.isDirty
             onResetClicked: {
                 positionSetting.resetToDefault();
-                animationTypeSetting.resetToDefault();
+                entryAnimationSetting.resetToDefault();
+                exitAnimationSetting.resetToDefault();
                 keycapStyleSetting.resetToDefault();
                 roundedKeycapsSetting.resetToDefault();
                 overlayOpacitySetting.resetToDefault();
@@ -173,14 +128,25 @@ print(json.dumps(devs))
 
         Separator {}
 
-        SelectionSettingPlus {
-            id: animationTypeSetting
-            settingKey: "animationType"
-            label: I18n.tr("Animation Style")
+        ButtonGroupSettingPlus {
+            id: entryAnimationSetting
+            settingKey: "entryAnimation"
+            label: I18n.tr("Entry Animation")
             options: [
                 { label: I18n.tr("Zoom"), value: "zoom" },
                 { label: I18n.tr("Fade Only"), value: "fade" },
-                { label: I18n.tr("Slide"), value: "slide" },
+                { label: I18n.tr("None"), value: "none" }
+            ]
+            defaultValue: "none"
+        }
+
+        ButtonGroupSettingPlus {
+            id: exitAnimationSetting
+            settingKey: "exitAnimation"
+            label: I18n.tr("Exit Animation")
+            options: [
+                { label: I18n.tr("Zoom"), value: "zoom" },
+                { label: I18n.tr("Fade Only"), value: "fade" },
                 { label: I18n.tr("None"), value: "none" }
             ]
             defaultValue: "none"

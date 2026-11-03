@@ -49,7 +49,6 @@ PluginComponent {
     property string pendingCaptureAction: "edit"
     property string pendingCaptureMode: ""
     property string pendingOutputName: ""
-    property bool waitingForControlCenterClose: false
     property bool pendingFromControlCenter: false
     property var pendingMenuAction: null
 
@@ -94,8 +93,11 @@ PluginComponent {
     }
 
     function record(mode, geometry, fromControlCenter) {
-        if (fromControlCenter && root.hideControlCenter)
+        if (fromControlCenter && root.hideControlCenter) {
             closeControlCenter();
+            Qt.callLater(() => recorder.startRecording(mode || "screen", geometry || ""));
+            return;
+        }
         recorder.startRecording(mode || "screen", geometry || "");
     }
 
@@ -109,7 +111,13 @@ PluginComponent {
     }
 
     function closeControlCenter() {
-        PopoutService.closeControlCenter();
+        PopoutService.closeIslandActivity("controlcenter");
+        const cc = PopoutService.controlCenterPopout;
+        if (cc && typeof cc.instantClose === "function") {
+            cc.instantClose();
+        } else {
+            PopoutService.closeControlCenter();
+        }
     }
 
     function capturePath() {
@@ -152,25 +160,15 @@ PluginComponent {
         root.pendingOutputName = outputName || "";
         root.pendingFromControlCenter = !!fromControlCenter;
 
-        if (!fromControlCenter || !root.hideControlCenter) {
-            startActualCapture();
+        if (fromControlCenter && root.hideControlCenter) {
+            closeControlCenter();
+            Qt.callLater(startActualCapture);
             return;
         }
-        closeControlCenter();
-        root.waitingForControlCenterClose = true;
-        captureDelayTimer.start();
-    }
-
-    function startCaptureAfterControlCenterClose() {
-        if (!root.waitingForControlCenterClose)
-            return;
-        root.waitingForControlCenterClose = false;
-        captureDelayTimer.stop();
         startActualCapture();
     }
 
     function startActualCapture() {
-        root.waitingForControlCenterClose = false;
         const mode = root.pendingCaptureMode;
         const action = root.pendingCaptureAction;
         const timeout = mode === "scroll" ? root.scrollCaptureTimeoutMs : root.captureTimeoutMs;
@@ -485,24 +483,6 @@ PluginComponent {
 
         function setWidgetMode(mode) {
             root.widgetMode = mode;
-        }
-    }
-
-    Timer {
-        id: captureDelayTimer
-        interval: Math.max(50, Theme.popoutAnimationDuration + 50)
-        onTriggered: {
-            if (root.waitingForControlCenterClose)
-                root.startCaptureAfterControlCenterClose();
-            else
-                root.startActualCapture();
-        }
-    }
-
-    Connections {
-        target: PopoutService.controlCenterPopout
-        function onPopoutClosed() {
-            root.startCaptureAfterControlCenterClose();
         }
     }
 
