@@ -32,6 +32,10 @@ git clone https://github.com/hthienloc/dms-persona5-calendar ~/.config/DankMater
 3. Optionally select a separate **Working Exceptions Calendar** with all-day events on
    transferred working days. These events take priority over holidays.
 
+Only all-day events affect colors, including holidays on Saturdays. Highlighting is
+disabled by default and updates every five minutes or with **Refresh Calendars**.
+If dcal or a selected calendar is unavailable, the original weekday colors are used.
+
 ## Usage
 
 | Action | Result |

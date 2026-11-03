@@ -56,6 +56,78 @@ PluginSettings {
     }
 
     SettingsCard {
+        SectionTitle {
+            id: usageTitle
+            text: I18n.trFor("persona5Calendar", "Usage Guide")
+            icon: "menu_book"
+            collapsible: true
+            settingKey: "usageGuideExpanded"
+        }
+        UsageGuide {
+            expanded: usageTitle.isExpanded
+            items: [
+                I18n.trFor("persona5Calendar", "Left-click: perform the configured action."),
+                I18n.trFor("persona5Calendar", "Connect a holiday calendar in Dux Calendar and select it below."),
+                I18n.trFor("persona5Calendar", "All-day events turn dates red; working exceptions take priority.")
+            ]
+        }
+    }
+
+    SettingsCard {
+        SectionTitle {
+            text: I18n.trFor("persona5Calendar", "Holidays")
+            icon: "event"
+            showReset: holidayEnabled.isDirty || holidayCalendar.isDirty || workingCalendar.isDirty
+            onResetClicked: {
+                holidayEnabled.resetToDefault();
+                holidayCalendar.resetToDefault();
+                workingCalendar.resetToDefault();
+            }
+        }
+        ToggleSettingPlus {
+            id: holidayEnabled
+            settingKey: "holidayHighlightEnabled"
+            label: I18n.trFor("persona5Calendar", "Highlight Holidays")
+            defaultValue: false
+        }
+        Calendar.CalendarSelection {
+            id: holidayCalendar
+            settings: root
+            settingKey: "holidayCalendarId"
+            label: I18n.trFor("persona5Calendar", "Calendar of Red Dates")
+            options: root.calendarOptions(value, workingCalendar.value)
+            enabled: holidayEnabled.value
+        }
+        Calendar.CalendarSelection {
+            id: workingCalendar
+            settings: root
+            settingKey: "workingCalendarId"
+            label: I18n.trFor("persona5Calendar", "Working Exceptions Calendar")
+            description: I18n.trFor("persona5Calendar", "Optional. All-day events make the date use ordinary weekday colors, including working Saturdays and Sundays.")
+            options: root.calendarOptions(value, holidayCalendar.value)
+            enabled: holidayEnabled.value
+        }
+        StyledText {
+            width: parent.width
+            wrapMode: Text.WordWrap
+            elide: Text.ElideNone
+            color: Theme.surfaceVariantText
+            font.pixelSize: Theme.fontSizeMedium
+            text: root.holidayStatusText
+        }
+        DButton {
+            text: I18n.trFor("persona5Calendar", "Refresh Calendars")
+            iconName: "refresh"
+            busy: holidays.busy
+            enabled: holidayEnabled.value && !holidays.busy
+            onClicked: {
+                holidays.refresh();
+                PluginService.setGlobalVar("persona5Calendar", "holidayRefresh", Date.now());
+            }
+        }
+    }
+
+    SettingsCard {
         id: appearanceSection
 
         SectionTitle {
@@ -185,75 +257,6 @@ PluginSettings {
                 { label: I18n.trFor("persona5Calendar", "Show Date & Weather Toast"), value: "dateInfo" },
                 { label: I18n.trFor("persona5Calendar", "None"), value: "none" }
             ]
-        }
-    }
-
-    SettingsCard {
-        SectionTitle {
-            text: I18n.trFor("persona5Calendar", "Holiday Calendar Guide")
-            icon: "help"
-        }
-        StyledText {
-            width: parent.width
-            wrapMode: Text.WordWrap
-            elide: Text.ElideNone
-            color: Theme.surfaceText
-            font.pixelSize: Theme.fontSizeMedium
-            text: I18n.trFor("persona5Calendar", "Connect a holiday calendar in Dux Calendar, then select it below. All-day events turn dates red. A separate working exceptions calendar takes priority.")
-        }
-    }
-
-    SettingsCard {
-        SectionTitle {
-            text: I18n.trFor("persona5Calendar", "Holidays")
-            icon: "event"
-            showReset: holidayEnabled.isDirty || holidayCalendar.isDirty || workingCalendar.isDirty
-            onResetClicked: {
-                holidayEnabled.resetToDefault();
-                holidayCalendar.resetToDefault();
-                workingCalendar.resetToDefault();
-            }
-        }
-        ToggleSettingPlus {
-            id: holidayEnabled
-            settingKey: "holidayHighlightEnabled"
-            label: I18n.trFor("persona5Calendar", "Highlight Holidays")
-            defaultValue: false
-        }
-        Calendar.CalendarSelection {
-            id: holidayCalendar
-            settings: root
-            settingKey: "holidayCalendarId"
-            label: I18n.trFor("persona5Calendar", "Calendar of Red Dates")
-            options: root.calendarOptions(value, workingCalendar.value)
-            enabled: holidayEnabled.value
-        }
-        Calendar.CalendarSelection {
-            id: workingCalendar
-            settings: root
-            settingKey: "workingCalendarId"
-            label: I18n.trFor("persona5Calendar", "Working Exceptions Calendar")
-            description: I18n.trFor("persona5Calendar", "Optional. All-day events make the date use ordinary weekday colors, including working Saturdays and Sundays.")
-            options: root.calendarOptions(value, holidayCalendar.value)
-            enabled: holidayEnabled.value
-        }
-        StyledText {
-            width: parent.width
-            wrapMode: Text.WordWrap
-            elide: Text.ElideNone
-            color: Theme.surfaceVariantText
-            font.pixelSize: Theme.fontSizeMedium
-            text: root.holidayStatusText
-        }
-        DButton {
-            text: I18n.trFor("persona5Calendar", "Refresh Calendars")
-            iconName: "refresh"
-            busy: holidays.busy
-            enabled: holidayEnabled.value && !holidays.busy
-            onClicked: {
-                holidays.refresh();
-                PluginService.setGlobalVar("persona5Calendar", "holidayRefresh", Date.now());
-            }
         }
     }
 

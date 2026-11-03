@@ -48,7 +48,7 @@ Item {
     function _findSettings() {
         let item = parent;
         while (item) {
-            if ("saveValue" in item && "loadValue" in item) {
+            if (item.saveValue !== undefined && item.loadValue !== undefined) {
                 return item;
             }
             item = item.parent;

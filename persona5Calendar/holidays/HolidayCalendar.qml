@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Quickshell.Io
+import qs.Common as Common
 
 // A private, read-only IPC client: never changes CalendarService's shared range.
 Item {
@@ -24,7 +24,6 @@ Item {
     property bool _busy: false
     property bool _pending: false
     property bool _complete: false
-    property bool _timedOut: false
     property int _generation: 0
     property int _requestGeneration: 0
     property string _resultKey: ""
@@ -73,15 +72,13 @@ Item {
             return;
         }
         _stage = stage;
-        _timedOut = false;
-        _output = "";
-        process.command = command;
-        process.running = true;
-        watchdog.restart();
+        Common.Proc.runCommand(null, command, (stdout, exitCode) => {
+            root._output = stdout;
+            root._receive(exitCode);
+        }, 0, 20000, root);
     }
 
     function _finish(nextStatus) {
-        watchdog.stop();
         _busy = false;
         if (_requestGeneration === _generation) {
             if (nextStatus !== "ready" && nextStatus !== "loading") {
@@ -116,12 +113,11 @@ Item {
     }
 
     function _receive(exitCode) {
-        watchdog.stop();
         if (_requestGeneration !== _generation) {
             _finish(status);
             return;
         }
-        if (_timedOut || exitCode !== 0) {
+        if (exitCode !== 0) {
             if (_stage === "discover") calendars = [];
             _finish(_stage === "discover" ? "unavailable" : "error");
             return;
@@ -161,26 +157,6 @@ Item {
             _finish("ready");
         } catch (error) {
             _finish("error");
-        }
-    }
-
-    Process {
-        id: process
-        stdout: StdioCollector {
-            onStreamFinished: root._output = text
-        }
-        // Consume diagnostic output without exposing account details in the UI.
-        stderr: StdioCollector {}
-        onExited: exitCode => root._receive(exitCode)
-    }
-
-    Timer {
-        id: watchdog
-        interval: 20000
-        onTriggered: {
-            root._timedOut = true;
-            if (process.running) process.signal(9);
-            else root._finish("error");
         }
     }
 
