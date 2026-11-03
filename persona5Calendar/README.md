@@ -33,14 +33,15 @@ git clone https://github.com/hthienloc/dms-persona5-calendar ~/.config/DankMater
    transferred working days. These events take priority over holidays.
 
 Only all-day events affect colors, including holidays on Saturdays. Highlighting is
-disabled by default and updates every five minutes or with **Refresh Calendars**.
+disabled by default and updates every five minutes, with **Refresh Calendars**, or
+by clicking the widget with **Refresh Weather & Holidays** selected.
 If dcal or a selected calendar is unavailable, the original weekday colors are used.
 
 ## Usage
 
 | Action | Result |
 |--------|--------|
-| Left click | Trigger configured action (refresh weather / show date toast / none) |
+| Left click | Trigger configured action (refresh weather and holidays / show date toast / none) |
 
 ## Credits
 

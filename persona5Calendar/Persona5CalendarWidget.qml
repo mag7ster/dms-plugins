@@ -245,8 +245,9 @@ DesktopPluginComponent {
             onClicked: {
                 if (root.clickAction === "refresh") {
                     if (WeatherService) WeatherService.forceRefresh();
+                    holidays.refresh();
                     if (typeof ToastService !== "undefined" && ToastService) {
-                        ToastService.showInfo(I18n.trFor("persona5Calendar", "Weather refreshed"));
+                        ToastService.showInfo(I18n.trFor("persona5Calendar", "Refreshing widget data"));
                     }
                 } else if (root.clickAction === "dateInfo") {
                     const dateStr = root.now ? root.now.toLocaleDateString(Qt.locale(), Locale.LongFormat) : "";

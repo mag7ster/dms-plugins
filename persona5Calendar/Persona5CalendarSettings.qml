@@ -253,7 +253,7 @@ PluginSettings {
             description: I18n.trFor("persona5Calendar", "Action triggered when clicking anywhere on the calendar.")
             defaultValue: "refresh"
             options: [
-                { label: I18n.trFor("persona5Calendar", "Force Refresh Weather"), value: "refresh" },
+                { label: I18n.trFor("persona5Calendar", "Refresh Weather & Holidays"), value: "refresh" },
                 { label: I18n.trFor("persona5Calendar", "Show Date & Weather Toast"), value: "dateInfo" },
                 { label: I18n.trFor("persona5Calendar", "None"), value: "none" }
             ]
